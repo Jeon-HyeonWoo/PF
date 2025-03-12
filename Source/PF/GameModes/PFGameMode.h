@@ -14,4 +14,14 @@ class PF_API APFGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+
+	APFGameMode();
+
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
+	/*
+	* Select Experience Loading for Next Tick
+	*/
+	void HandleMatchAssignmentIfNotExpectingOne();
 };

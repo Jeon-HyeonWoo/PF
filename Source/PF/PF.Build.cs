@@ -15,6 +15,7 @@ public class PF : ModuleRules
 			"InputCore",
 			"EnhancedInput",
             "GameplayTags",
+			"ModularGameplay",
 
         });
 
