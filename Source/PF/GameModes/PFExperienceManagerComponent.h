@@ -33,6 +33,8 @@ public:
 	/* Check CurrentExperience State is Loaded? */
 	void CallOrRegister_OnExperienceLoaded(FOnPFExperienceLoaded::FDelegate&& Delegate);
 
+	/* Given GameMode::OnMatchAssignmentGiven, */
+	void ServerSetCurrentExperience(FPrimaryAssetId ExperienceId);
 public:
 
 	UPROPERTY()

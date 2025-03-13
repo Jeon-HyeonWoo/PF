@@ -2,6 +2,7 @@
 
 
 #include "PFExperienceManagerComponent.h"
+#include "PF/System/PFAssetManager.h"
 
 void UPFExperienceManagerComponent::CallOrRegister_OnExperienceLoaded(FOnPFExperienceLoaded::FDelegate&& Delegate)
 {
@@ -12,5 +13,15 @@ void UPFExperienceManagerComponent::CallOrRegister_OnExperienceLoaded(FOnPFExper
 	else
 	{
 		OnExperienceLoaded.Add(MoveTemp(Delegate));
+	}
+}
+
+void UPFExperienceManagerComponent::ServerSetCurrentExperience(FPrimaryAssetId ExperienceId)
+{
+	UPFAssetManager& AssetManager = UPFAssetManager::Get();
+
+	TSubclassOf<UPFExperienceDefinition> AssetClass;
+	{
+		FSoftObjectPath AssetPath = AssetManager.GetPrimaryAssetPath(ExperienceId);
 	}
 }
