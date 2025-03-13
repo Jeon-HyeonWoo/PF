@@ -6,6 +6,7 @@
 #include "GameFramework/GameStateBase.h"
 #include "PFGameState.generated.h"
 
+class UPFExperienceManagerComponent;
 /**
  * 
  */
@@ -13,5 +14,14 @@ UCLASS()
 class PF_API APFGameState : public AGameStateBase
 {
 	GENERATED_BODY()
+
+public:
+
+	APFGameState();
+
+public:
+
+	UPROPERTY()
+	TObjectPtr<UPFExperienceManagerComponent> ExperienceManagerComponent;
 	
 };

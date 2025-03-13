@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PFGameMode.generated.h"
 
+class UPFExperienceDefinition;
 /**
  * 
  */
@@ -18,10 +19,16 @@ public:
 
 	APFGameMode();
 
+	/* Call Immediately After GameModeBase Constrctor was Created */
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	/* Call After GameState Constructor was Created */
+	virtual void InitGameState() override;
 
 	/*
 	* Select Experience Loading for Next Tick
 	*/
 	void HandleMatchAssignmentIfNotExpectingOne();
+	
+	/* Call InitGameState, ExperienceLoad is finished */
+	void OnExperienceLoaded(const UPFExperienceDefinition* CurrentExperience);
 };

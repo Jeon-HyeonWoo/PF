@@ -2,4 +2,9 @@
 
 
 #include "PFGameState.h"
+#include "PF/GameModes/PFExperienceManagerComponent.h"
 
+APFGameState::APFGameState()
+{
+	ExperienceManagerComponent = CreateDefaultSubobject<UPFExperienceManagerComponent>(TEXT("ExperienceManagerComponent"));
+}
