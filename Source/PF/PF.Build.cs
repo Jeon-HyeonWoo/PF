@@ -16,7 +16,7 @@ public class PF : ModuleRules
 			"EnhancedInput",
             "GameplayTags",
 			"ModularGameplay",
-
+			"GameFeatures",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

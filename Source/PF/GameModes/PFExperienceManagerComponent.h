@@ -33,12 +33,24 @@ public:
 	/* Check CurrentExperience State is Loaded? */
 	void CallOrRegister_OnExperienceLoaded(FOnPFExperienceLoaded::FDelegate&& Delegate);
 
-	/* Given GameMode::OnMatchAssignmentGiven, */
+	/* 
+	* Given GameMode::OnMatchAssignmentGiven,
+	* Apply the Scanned path from AssetManager to current experience
+	*/
 	void ServerSetCurrentExperience(FPrimaryAssetId ExperienceId);
+
+	/* Match Experience Bundles */
+	void StartExperienceLoad();
+
+	/* call experience loaded with out problems, Experience and other things load*/
+	void OnExperienceLoadComplete();
+
+	/* BoardCast Experience Load Complete */
+	void OnExperienceFullLoadCompleted();
 public:
 
 	UPROPERTY()
-	TObjectPtr<UPFExperienceDefinition> CurrentExperience;
+	TObjectPtr<const UPFExperienceDefinition> CurrentExperience;
 	
 	EPFExperienceLoadState LoadState = EPFExperienceLoadState::Unload;
 
