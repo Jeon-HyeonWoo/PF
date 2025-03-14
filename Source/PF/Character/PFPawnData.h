@@ -18,7 +18,7 @@ public:
 
 	UPFPawnData(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
-	/*  */
+	/* Cache for GAS */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PF|Pawn")
 	TSubclassOf<APawn> PawnClass;
 };

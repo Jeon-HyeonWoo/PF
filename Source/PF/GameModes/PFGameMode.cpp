@@ -6,8 +6,10 @@
 #include "PF/Player/PFPlayerController.h"
 #include "PF/Player/PFPlayerState.h"
 #include "PF/Character/PFCharacter.h"
+#include "PF/Character/PFPawnData.h"
 #include "PF/GameModes/PFExperienceManagerComponent.h"
 #include "PF/GameModes/PFExperienceDefinition.h"
+
 
 APFGameMode::APFGameMode()
 {
@@ -32,6 +34,18 @@ void APFGameMode::InitGameState()
 	check(ExperienceManagerComponent);
 
 	ExperienceManagerComponent->CallOrRegister_OnExperienceLoaded(FOnPFExperienceLoaded::FDelegate::CreateUObject(this, &ThisClass::OnExperienceLoaded));
+}
+
+UClass* APFGameMode::GetDefaultPawnClassForController_Implementation(AController* InController)
+{
+	if (const UPFPawnData* PawnData = GetPawnDataForController(InController))
+	{
+		if (PawnData->PawnClass)
+		{
+			return PawnData->PawnClass;
+		}
+	}
+	return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
 void APFGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -83,5 +97,47 @@ bool APFGameMode::IsExperienceLoaded() const
 
 void APFGameMode::OnExperienceLoaded(const UPFExperienceDefinition* CurrentExperience)
 {
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		APlayerController* PC = Cast<APlayerController>(*Iterator);
 
+		if (PC && PC->GetPawn() == nullptr)
+		{
+			if (PlayerCanRestart(PC))
+			{
+				RestartPlayer(PC);
+			}
+		}
+	}
 }
+
+const UPFPawnData* APFGameMode::GetPawnDataForController(const AController* InController) const
+{
+	//PlayerState Cached Pawn Data
+	if (InController)
+	{
+		if (const APFPlayerState* PFPS = InController->GetPlayerState<APFPlayerState>())
+		{
+			if (const UPFPawnData* PawnData = PFPS->GetPawnData<UPFPawnData>())
+			{
+				return PawnData;
+			}
+		}
+	}
+
+	//if the PlayerState dose not have cached pawn data, brings currentexperience in Managercomponent
+	check(GameState); 
+	UPFExperienceManagerComponent* ExperienceManagerComponent = GameState->FindComponentByClass<UPFExperienceManagerComponent>();
+	check(ExperienceManagerComponent);
+
+	if (ExperienceManagerComponent->IsExperienceLoaded())
+	{
+		const UPFExperienceDefinition* Experience = ExperienceManagerComponent->GetCurrentExperienceChecked();
+		if (Experience->DefaultPawnData)
+		{
+			return Experience->DefaultPawnData;
+		}
+	}
+
+	return nullptr;
+ }

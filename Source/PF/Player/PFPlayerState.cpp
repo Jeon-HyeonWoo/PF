@@ -3,6 +3,7 @@
 
 #include "PFPlayerState.h"
 #include "PF/GameModes/PFExperienceManagerComponent.h"
+#include "PF/GameModes/PFGameMode.h"
 
 void APFPlayerState::PostInitializeComponents()
 {
@@ -19,4 +20,20 @@ void APFPlayerState::PostInitializeComponents()
 
 void APFPlayerState::OnExperienceLoaded(const UPFExperienceDefinition* CurrentExperience)
 {
+	if (APFGameMode* GameMode = GetWorld()->GetAuthGameMode<APFGameMode>())
+	{
+		const UPFPawnData* NewPawnData = GameMode->GetPawnDataForController(GetOwningController());
+		check(NewPawnData);
+
+		SetPawnData(NewPawnData);
+	}
+}
+
+void APFPlayerState::SetPawnData(const UPFPawnData* InPawnData)
+{
+	check(InPawnData);
+
+	check(!PawnData);
+
+	PawnData = InPawnData;
 }

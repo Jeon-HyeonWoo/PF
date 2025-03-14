@@ -47,6 +47,8 @@ public:
 
 	/* BoardCast Experience Load Complete */
 	void OnExperienceFullLoadCompleted();
+
+	const UPFExperienceDefinition* GetCurrentExperienceChecked() const;
 public:
 
 	UPROPERTY()

@@ -20,8 +20,16 @@ public:
 	
 	virtual void PostInitializeComponents() final;
 
+	/*
+	* Return Cached Pawn Data template type
+	*/
+	template <class T>
+	const T* GetPawnData() const { return Cast<T>(PawnData); }
+
 	/* for cache PawnData, need to know Experience Load is Completed */
 	void OnExperienceLoaded(const UPFExperienceDefinition* CurrentExperience);
+
+	void SetPawnData(const UPFPawnData* InPawnData);
 
 	/* for GAS PawnData Cache */
 	UPROPERTY()

@@ -7,6 +7,7 @@
 #include "PFGameMode.generated.h"
 
 class UPFExperienceDefinition;
+class UPFPawnData;
 /**
  * 
  */
@@ -15,6 +16,7 @@ class PF_API APFGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+	//Constructor and GameMode Override
 public:
 
 	APFGameMode();
@@ -24,11 +26,16 @@ public:
 	/* Call After GameState Constructor was Created */
 	virtual void InitGameState() override;
 
+	/* Set Default Pawn class -> GameModes PawnClass */
+	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) final;
+
 	/* Signals that Player is ready to enter the Game */
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) final;
 
 	virtual APawn* SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform) final;
 
+	//Request for Experience Load
+public:
 	/*
 	* Select Experience Loading for Next Tick, No Experience to match -> Default
 	*/
@@ -37,10 +44,12 @@ public:
 	/* Given HandleMatchAssignment's ExperienceId, and ExperienceId Send to ExperienceManager */
 	void OnMatchAssignmentGiven(FPrimaryAssetId ExperienceId);
 
-	
 	/* Get ExperienceManagerComponent's LoadState */
 	bool IsExperienceLoaded() const;
 
 	/* Call InitGameState, ExperienceLoad is finished */
 	void OnExperienceLoaded(const UPFExperienceDefinition* CurrentExperience);
+
+	/* Get Current Loaded Experience PawnData */
+	const UPFPawnData* GetPawnDataForController(const AController* InController) const;
 };

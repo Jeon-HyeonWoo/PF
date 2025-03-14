@@ -114,3 +114,11 @@ void UPFExperienceManagerComponent::OnExperienceFullLoadCompleted()
 	OnExperienceLoaded.Broadcast(CurrentExperience);
 	OnExperienceLoaded.Clear();
 }
+
+const UPFExperienceDefinition* UPFExperienceManagerComponent::GetCurrentExperienceChecked() const
+{
+	check(LoadState == EPFExperienceLoadState::Loaded);
+	check(CurrentExperience != nullptr);
+
+	return CurrentExperience;
+}
