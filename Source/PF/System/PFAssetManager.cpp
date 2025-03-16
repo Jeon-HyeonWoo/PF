@@ -3,6 +3,7 @@
 
 #include "PFAssetManager.h"
 #include "PF/PFLogChannels.h"
+#include "PF/PFGameplayTags.h"
 
 UPFAssetManager::UPFAssetManager()
 {
@@ -21,6 +22,13 @@ UPFAssetManager& UPFAssetManager::Get()
 
 	return *NewObject<UPFAssetManager>();
  }
+
+void UPFAssetManager::StartInitialLoading()
+{
+	Super::StartInitialLoading();
+
+	FPFGameplayTags::InitializeNatvieTags();
+}
 
 bool UPFAssetManager::ShouldLogAssetLoad()
 {

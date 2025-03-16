@@ -2,13 +2,19 @@
 
 
 #include "PFCharacter.h"
+#include "PFPawnExtensionComponent.h"
 
 // Sets default values
 APFCharacter::APFCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+	PrimaryActorTick.bCanEverTick = false;
 
+	//PawnExtensionComponent
+	{
+		PawnExtComponent = CreateDefaultSubobject<UPFPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+	}
 }
 
 // Called when the game starts or when spawned

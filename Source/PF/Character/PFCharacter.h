@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "PFCharacter.generated.h"
 
+class UPFPawnExtensionComponent;
+
 UCLASS()
 class PF_API APFCharacter : public ACharacter
 {
@@ -26,4 +28,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF | Charater")
+	TObjectPtr<UPFPawnExtensionComponent> PawnExtComponent;
 };

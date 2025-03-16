@@ -22,6 +22,11 @@ public:
 	//Get SingleTon Instance
 	static UPFAssetManager& Get();
 
+	/*
+	* GameplayTag Native Initialize Tags
+	*/
+	virtual void StartInitialLoading() final;
+
 	//FScopeLogTime(Performance, Runtime-Perform 체크용) 사용 여부 확인
 	static bool ShouldLogAssetLoad();
 
