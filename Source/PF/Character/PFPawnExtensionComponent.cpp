@@ -29,6 +29,12 @@ void UPFPawnExtensionComponent::SetPawnData(const UPFPawnData* InPawnData)
 	}
 
 	PawnData = InPawnData;
+
+}
+
+void UPFPawnExtensionComponent::SetupPlayerInputComponent()
+{
+	CheckDefaultInitialization();
 }
 
 void UPFPawnExtensionComponent::OnRegister()

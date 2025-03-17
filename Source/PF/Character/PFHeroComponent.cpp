@@ -5,8 +5,10 @@
 #include "PF/PFLogChannels.h"
 #include "PF/PFGameplayTags.h"
 #include "PF/Character/PFPawnExtensionComponent.h"
+#include "PF/Character/PFPawnData.h"
 #include "PF/Player/PFPlayerState.h"
 #include "Components/GameFrameworkComponentManager.h"
+
 
 const FName UPFHeroComponent::Name_ActorFeatureName("HeroComponent");
 
@@ -88,7 +90,7 @@ bool UPFHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Manage
 
 		return true;
 	}
-
+	
 	//DataAvailable -> DataInitialized
 	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
 	{
@@ -110,6 +112,26 @@ bool UPFHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Manage
 
 void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState)
 {
+	const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
+
+	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
+	{
+		APawn* Pawn = GetPawn<APawn>();
+		APFPlayerState* PFPS = GetPlayerState<APFPlayerState>();
+		if (!ensure(Pawn && PFPS))
+		{
+			return;
+		}
+
+		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
+		const UPFPawnData* PawnData = nullptr;
+		if (UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			PawnData = PawnExtComp->GetPawnData<UPFPawnData>();
+		}
+	}
+
+
 }
 
 void UPFHeroComponent::CheckDefaultInitialization()

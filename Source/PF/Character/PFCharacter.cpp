@@ -3,6 +3,7 @@
 
 #include "PFCharacter.h"
 #include "PFPawnExtensionComponent.h"
+#include "PF/Character/PFPawnExtensionComponent.h"
 
 // Sets default values
 APFCharacter::APFCharacter()
@@ -36,5 +37,6 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PawnExtComponent->SetupPlayerInputComponent();
 }
 
