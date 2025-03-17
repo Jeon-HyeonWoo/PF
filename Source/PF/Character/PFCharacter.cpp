@@ -4,6 +4,7 @@
 #include "PFCharacter.h"
 #include "PFPawnExtensionComponent.h"
 #include "PF/Character/PFPawnExtensionComponent.h"
+#include "PF/Camera/PFCameraComponent.h"
 
 // Sets default values
 APFCharacter::APFCharacter()
@@ -15,6 +16,12 @@ APFCharacter::APFCharacter()
 	//PawnExtensionComponent
 	{
 		PawnExtComponent = CreateDefaultSubobject<UPFPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+	}
+
+	//CameraComponent
+	{
+		CameraComponent = CreateDefaultSubobject<UPFCameraComponent>(TEXT("CameraComponent"));
+		CameraComponent->SetRelativeLocation(FVector(-300.0f, 0.0f, 75.0f));
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "PFCharacter.generated.h"
 
 class UPFPawnExtensionComponent;
+class UPFCameraComponent;
 
 UCLASS()
 class PF_API APFCharacter : public ACharacter
@@ -32,4 +33,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF | Charater")
 	TObjectPtr<UPFPawnExtensionComponent> PawnExtComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF | Charater")
+	TObjectPtr<UPFCameraComponent> CameraComponent;
 };

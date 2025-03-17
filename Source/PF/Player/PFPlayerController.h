@@ -13,5 +13,9 @@ UCLASS()
 class PF_API APFPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	APFPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
 };
