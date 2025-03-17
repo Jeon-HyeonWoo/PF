@@ -15,6 +15,22 @@ UPFPawnExtensionComponent::UPFPawnExtensionComponent(const FObjectInitializer& O
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+void UPFPawnExtensionComponent::SetPawnData(const UPFPawnData* InPawnData)
+{
+	APawn* Pawn = GetPawnChecked<APawn>();
+	if (Pawn->GetLocalRole() != ROLE_Authority)
+	{
+		return;
+	}
+
+	if (PawnData)
+	{
+		return;
+	}
+
+	PawnData = InPawnData;
+}
+
 void UPFPawnExtensionComponent::OnRegister()
 {
 	Super::OnRegister();
@@ -60,6 +76,15 @@ void UPFPawnExtensionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason
 
 void UPFPawnExtensionComponent::OnActorInitStateChanged(const FActorInitStateChangedParams& Params)
 {
+	//same if(Registed Other Components)
+	if (Params.FeatureName != Name_ActorFeatureName)
+	{
+		const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
+		if (Params.FeatureState == InitTags.InitState_DataAvailable)
+		{
+			CheckDefaultInitialization();
+		}
+	}
 }
 
 bool UPFPawnExtensionComponent::CanChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const
@@ -99,6 +124,9 @@ bool UPFPawnExtensionComponent::CanChangeInitState(UGameFrameworkComponentManage
 	
 	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
 	{
+		/*
+		* Pawn에 부착된 모든 Feature들이 InitState의 지점에 도착하면 true를 반환
+		*/
 		return Manager->HaveAllFeaturesReachedInitState(Pawn, InitTags.InitState_DataAvailable);
 	}
 

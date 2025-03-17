@@ -5,6 +5,8 @@
 #include "PF/PFLogChannels.h"
 #include "PF/PFGameplayTags.h"
 #include "PF/Character/PFPawnExtensionComponent.h"
+#include "PF/Player/PFPlayerState.h"
+#include "Components/GameFrameworkComponentManager.h"
 
 const FName UPFHeroComponent::Name_ActorFeatureName("HeroComponent");
 
@@ -49,10 +51,60 @@ void UPFHeroComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void UPFHeroComponent::OnActorInitStateChanged(const FActorInitStateChangedParams& Params)
 {
+	const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
+
+	if (Params.FeatureName == UPFPawnExtensionComponent::Name_ActorFeatureName)
+	{
+		if (Params.FeatureState == InitTags.InitState_DataAvailable)
+		{
+			CheckDefaultInitialization();
+		}
+	}
 }
 
 bool UPFHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const
 {
+	check(Manager);
+
+	const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
+	APawn* Pawn = GetPawn<APawn>();
+	APlayerState* PFPS = GetPlayerState<APlayerState>();
+
+	if (!CurrentState.IsValid() && DesiredState == InitTags.InitState_Spawned)
+	{
+		if (Pawn)
+		{
+			return true;
+		}
+	}
+
+	//Spanwed -> DataAvailable
+	if (CurrentState == InitTags.InitState_Spawned && DesiredState == InitTags.InitState_DataAvailable)
+	{
+		if (!PFPS)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	//DataAvailable -> DataInitialized
+	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
+	{
+		/*
+			PawnExtComp가 DataInitailized일 때 승인
+			Pawn에 있는, ExtComponent::Name이, InitState_Step일때 InitState를 진행.
+			함수이름대로 1. Pawn 가지고 있는 2. Feature(Component)가 3.InitState에 도달했다면,
+		*/
+		return PFPS && Manager->HasFeatureReachedInitState(Pawn, UPFPawnExtensionComponent::Name_ActorFeatureName, InitTags.InitState_DataInitialized);
+	}
+
+	if (CurrentState == InitTags.InitState_DataInitialized && DesiredState == InitTags.InitState_GameplayReady)
+	{
+		return true;
+	}
+
 	return false;
 }
 

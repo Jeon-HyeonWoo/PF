@@ -9,6 +9,7 @@
 #include "PF/Character/PFPawnData.h"
 #include "PF/GameModes/PFExperienceManagerComponent.h"
 #include "PF/GameModes/PFExperienceDefinition.h"
+#include "PF/Character/PFPawnExtensionComponent.h"
 
 
 APFGameMode::APFGameMode()
@@ -60,7 +61,29 @@ void APFGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewP
 
 APawn* APFGameMode::SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform)
 {
-	return Super::SpawnDefaultPawnAtTransform_Implementation(NewPlayer, SpawnTransform);
+	FActorSpawnParameters SpawnInfo;
+
+	SpawnInfo.Instigator = GetInstigator();
+	SpawnInfo.ObjectFlags |= RF_Transient;
+	SpawnInfo.bDeferConstruction = true;
+
+	if (UClass* PawnClass = GetDefaultPawnClassForController(NewPlayer))
+	{
+		if (APawn* SpawnedPawn = GetWorld()->SpawnActor<APawn>(PawnClass, SpawnTransform, SpawnInfo))
+		{
+			if (UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(SpawnedPawn))
+			{
+				if (const UPFPawnData* PawnData = GetPawnDataForController(NewPlayer))
+				{
+					PawnExtComp->SetPawnData(PawnData);
+				}
+			}
+			SpawnedPawn->FinishSpawning(SpawnTransform);
+			return SpawnedPawn;
+		}
+	}
+
+	return nullptr;
 }
 
 void APFGameMode::HandleMatchAssignmentIfNotExpectingOne()

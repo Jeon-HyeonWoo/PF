@@ -32,6 +32,7 @@ public:
 	/* Signals that Player is ready to enter the Game */
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) final;
 
+	/* Pawn Spawned in world */
 	virtual APawn* SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform) final;
 
 	//Request for Experience Load

@@ -20,6 +20,14 @@ public:
 
 	UPFPawnExtensionComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	static UPFPawnExtensionComponent* FindPawnExtensionComponent(const AActor* Actor)
+	{
+		return Actor ? Actor->FindComponentByClass<UPFPawnExtensionComponent>() : nullptr;
+	}
+	template <class T>
+	const T* GetPawnData() const { return Cast<T>(PawnData); }
+	void SetPawnData(const UPFPawnData* InPawnData);
+
 	/*
 	* Define FeatureName 
 	*/
