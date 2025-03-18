@@ -7,6 +7,8 @@
 #include "Components/GameFrameworkInitStateInterface.h"
 #include "PFHeroComponent.generated.h"
 
+class UPFCameraMode;
+
 /**
  * Component that sets input and camera handling for player controlled pawns (or bots that simulate players)
  * - this depends on a pawnextensioncomponent to coordinate initialization
@@ -43,4 +45,8 @@ public:
 	/* Apply Changing the Initstate*/
 	virtual void HandleChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) final;
 	virtual void CheckDefaultInitialization() final;
+
+public:
+
+	TSubclassOf<UPFCameraMode> DetermineCameraMode() const;
 };

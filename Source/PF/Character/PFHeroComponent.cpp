@@ -8,6 +8,8 @@
 #include "PF/Character/PFPawnData.h"
 #include "PF/Player/PFPlayerState.h"
 #include "Components/GameFrameworkComponentManager.h"
+#include "PF/Camera/PFCameraMode.h"
+#include "PF/Camera/PFCameraComponent.h"
 
 
 const FName UPFHeroComponent::Name_ActorFeatureName("HeroComponent");
@@ -129,6 +131,14 @@ void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Man
 		{
 			PawnData = PawnExtComp->GetPawnData<UPFPawnData>();
 		}
+
+		if (bIsLocallyControlled && PawnData)
+		{
+			if (UPFCameraComponent* CameraComponent = UPFCameraComponent::FindCameraComponent(Pawn))
+			{
+				CameraComponent->DetermineCameraModeDelegate.BindUObject(this, &ThisClass::DetermineCameraMode);
+			}
+		}
 	}
 
 
@@ -146,4 +156,26 @@ void UPFHeroComponent::CheckDefaultInitialization()
 	};
 
 	ContinueInitStateChain(StateChain);
+}
+
+TSubclassOf<UPFCameraMode> UPFHeroComponent::DetermineCameraMode() const
+{
+	const APawn* Pawn = GetPawn<APawn>();
+
+	//HeroComponent's Owner is not existed, return nullptr
+	if (!Pawn)
+	{
+		return nullptr;
+	}
+
+	//Find HeroComponent's Owner PawnExtComponent
+	if (UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+	{
+		if (const UPFPawnData* PawnData = PawnExtComp->GetPawnData<UPFPawnData>())
+		{
+			return PawnData->DefaultCameraMode;
+		}
+	}
+
+	return nullptr;
 }

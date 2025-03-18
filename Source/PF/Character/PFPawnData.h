@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "PFPawnData.generated.h"
 
+class UPFCameraMode;
 /**
  * 
  */
@@ -21,4 +22,8 @@ public:
 	/* Cache for GAS */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PF|Pawn")
 	TSubclassOf<APawn> PawnClass;
+
+	/* Camera */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PF|Camera")
+	TSubclassOf<UPFCameraMode> DefaultCameraMode;
 };
