@@ -9,6 +9,18 @@
 /**
  * 
  */
+
+struct FPFCameraModeView
+{
+	FPFCameraModeView();
+
+
+	FVector Location;
+	FRotator Rotation;
+	FRotator ControlRotation;
+	float FieldOfView;
+};
+
 UCLASS(Abstract, NotBlueprintable)
 class UPFCameraMode : public UObject
 {
@@ -16,6 +28,13 @@ class UPFCameraMode : public UObject
 public:
 
 	UPFCameraMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+public:
+		 
+	UPROPERTY(EditDefaultsOnly, Category = "Blending")
+	float BlendTime;
+	float BlendAlpha;
+	float BlendWeight;
 };
 
 UCLASS()
@@ -25,6 +44,15 @@ class UPFCameraModeStack : public UObject
 public:
 
 	UPFCameraModeStack(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+public:
+
+	UPFCameraMode* GetCameraModeInstance(TSubclassOf<UPFCameraMode>& CameraModeClass);
+	void PushCameraMode(TSubclassOf<UPFCameraMode>& CameraModeClass);
+	void EvaluateStack(float DeltaTime, FPFCameraModeView& OutCamreaModeView);
+	void UpdateStack(float DeltaTime);
+	void BlendStack(FPFCameraModeView& OutCameraModeView) const;
+public:
 
 	UPROPERTY()
 	TArray<TObjectPtr<UPFCameraMode>> CameraModeInstance;

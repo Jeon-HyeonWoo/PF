@@ -17,7 +17,7 @@ void UPFCameraComponent::OnRegister()
 	{
 		CameraModeStack = NewObject<UPFCameraModeStack>(this);
 	}
-
+	
 }
 
 void UPFCameraComponent::GetCameraView(float DeltaTime, FMinimalViewInfo& DesiredView)
@@ -25,6 +25,10 @@ void UPFCameraComponent::GetCameraView(float DeltaTime, FMinimalViewInfo& Desire
 	Super::GetCameraView(DeltaTime, DesiredView);
 
 	UpdateCameraModes();
+
+	FPFCameraModeView CameraModeView;
+	CameraModeStack->EvaluateStack(DeltaTime, CameraModeView);
+
 }
 
 void UPFCameraComponent::UpdateCameraModes()
@@ -35,9 +39,9 @@ void UPFCameraComponent::UpdateCameraModes()
 	if (DetermineCameraModeDelegate.IsBound())
 	{
 		//Receive TSubclassOf<CameraMode> from Delegate
-		if (const TSubclassOf<UPFCameraMode> CameraMode = DetermineCameraModeDelegate.Execute())
+		if (TSubclassOf<UPFCameraMode> CameraMode = DetermineCameraModeDelegate.Execute())
 		{
-			//CameraModeStack -> PushCameraMode(CameraMode);
+			CameraModeStack->PushCameraMode(CameraMode);
 		}
 	}
 }
