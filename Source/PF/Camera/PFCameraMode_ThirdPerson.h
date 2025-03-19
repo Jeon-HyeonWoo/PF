@@ -21,7 +21,7 @@ public:
 	
 	virtual void UpdateView(float DeltaTime) override;
 
-	//UCurveVector* TargetOffSetCurveNative;
+	UCurveVector* TargetOffSetCurveNative;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Third Person")
 	TObjectPtr<const UCurveVector> TargetOffSetCurve;

@@ -10,7 +10,7 @@ UPFCameraMode_ThirdPerson::UPFCameraMode_ThirdPerson(const FObjectInitializer& O
 {
 
 	
-	/*TargetOffSetCurveNative = CreateDefaultSubobject<UCurveVector>(TEXT("TargetOffSetCurveNative"));
+	TargetOffSetCurveNative = CreateDefaultSubobject<UCurveVector>(TEXT("TargetOffSetCurveNative"));
 	check(TargetOffSetCurveNative);
 
 	TargetOffSetCurveNative->FloatCurves[0].AddKey(-90.0f, -375.0f);
@@ -35,7 +35,7 @@ UPFCameraMode_ThirdPerson::UPFCameraMode_ThirdPerson(const FObjectInitializer& O
 	for (auto& Key : TargetOffSetCurveNative->FloatCurves[2].Keys)
 	{
 		Key.InterpMode = ERichCurveInterpMode::RCIM_Cubic;
-	}*/
+	}
 }
 
 void UPFCameraMode_ThirdPerson::UpdateView(float DeltaTime)
@@ -50,7 +50,7 @@ void UPFCameraMode_ThirdPerson::UpdateView(float DeltaTime)
 	View.ControlRotation = View.Rotation;
 	View.FieldOfView = FieldOfView;
 
-	if (TargetOffSetCurve)
+	if (TargetOffSetCurveNative)
 	{
 		const FVector TargetOffset = TargetOffSetCurve->GetVectorValue(PivotRotation.Pitch);
 		View.Location = PivotLocation + PivotRotation.RotateVector(TargetOffset);
