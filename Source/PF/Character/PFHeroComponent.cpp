@@ -11,7 +11,6 @@
 #include "PF/Camera/PFCameraMode.h"
 #include "PF/Camera/PFCameraComponent.h"
 
-
 const FName UPFHeroComponent::Name_ActorFeatureName("HeroComponent");
 
 UPFHeroComponent::UPFHeroComponent(const FObjectInitializer& ObjectInitializer)
@@ -24,13 +23,15 @@ UPFHeroComponent::UPFHeroComponent(const FObjectInitializer& ObjectInitializer)
 void UPFHeroComponent::OnRegister()
 {
 	Super::OnRegister();
-
+	
 	{
-		if (!GetPawn<APawn>())
+
+		if (!GetPawn<APawn>()) // OwnerPawn이 존재하지 않는다면,
 		{
-			UE_LOG(PFLog, Error, TEXT("this component has been added to a bp whoes base class is not a pawn"));
+			UE_LOG(PFLog, Error, TEXT("This Component has been added to a BP Whose base class is not a pawn"));
 			return;
 		}
+
 	}
 
 	RegisterInitStateFeature();
@@ -57,10 +58,13 @@ void UPFHeroComponent::OnActorInitStateChanged(const FActorInitStateChangedParam
 {
 	const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
 
+	//Find ExtComp
 	if (Params.FeatureName == UPFPawnExtensionComponent::Name_ActorFeatureName)
 	{
-		if (Params.FeatureState == InitTags.InitState_DataAvailable)
+		//ExtComp's State = Initialized?
+		if (Params.FeatureState == InitTags.InitState_DataInitialized)
 		{
+			//proceed change state to possible
 			CheckDefaultInitialization();
 		}
 	}
@@ -72,8 +76,9 @@ bool UPFHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Manage
 
 	const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
 	APawn* Pawn = GetPawn<APawn>();
-	APlayerState* PFPS = GetPlayerState<APlayerState>();
+	APFPlayerState* ClonePS = GetPlayerState<APFPlayerState>();
 
+	//Spawned 초기화
 	if (!CurrentState.IsValid() && DesiredState == InitTags.InitState_Spawned)
 	{
 		if (Pawn)
@@ -85,29 +90,25 @@ bool UPFHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Manage
 	//Spanwed -> DataAvailable
 	if (CurrentState == InitTags.InitState_Spawned && DesiredState == InitTags.InitState_DataAvailable)
 	{
-		if (!PFPS)
+		if (!ClonePS)
 		{
 			return false;
 		}
 
 		return true;
 	}
-	
+
 	//DataAvailable -> DataInitialized
 	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
 	{
-		/*
-			PawnExtComp가 DataInitailized일 때 승인
-			Pawn에 있는, ExtComponent::Name이, InitState_Step일때 InitState를 진행.
-			함수이름대로 1. Pawn 가지고 있는 2. Feature(Component)가 3.InitState에 도달했다면,
-		*/
-		return PFPS && Manager->HasFeatureReachedInitState(Pawn, UPFPawnExtensionComponent::Name_ActorFeatureName, InitTags.InitState_DataInitialized);
+		return ClonePS && Manager->HasFeatureReachedInitState(Pawn, UPFPawnExtensionComponent::Name_ActorFeatureName, InitTags.InitState_DataInitialized);
 	}
 
 	if (CurrentState == InitTags.InitState_DataInitialized && DesiredState == InitTags.InitState_GameplayReady)
 	{
 		return true;
 	}
+
 
 	return false;
 }
@@ -119,11 +120,12 @@ void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Man
 	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
 	{
 		APawn* Pawn = GetPawn<APawn>();
-		APFPlayerState* PFPS = GetPlayerState<APFPlayerState>();
-		if (!ensure(Pawn && PFPS))
+		APFPlayerState* ClonePS = GetPlayerState<APFPlayerState>();
+		if (!ensure(Pawn && ClonePS))
 		{
 			return;
 		}
+
 
 		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
 		const UPFPawnData* PawnData = nullptr;
@@ -132,6 +134,7 @@ void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Man
 			PawnData = PawnExtComp->GetPawnData<UPFPawnData>();
 		}
 
+		//Camera Handling
 		if (bIsLocallyControlled && PawnData)
 		{
 			if (UPFCameraComponent* CameraComponent = UPFCameraComponent::FindCameraComponent(Pawn))
@@ -139,9 +142,10 @@ void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Man
 				CameraComponent->DetermineCameraModeDelegate.BindUObject(this, &ThisClass::DetermineCameraMode);
 			}
 		}
+
+		//Input Handling
+		
 	}
-
-
 }
 
 void UPFHeroComponent::CheckDefaultInitialization()
@@ -162,19 +166,21 @@ TSubclassOf<UPFCameraMode> UPFHeroComponent::DetermineCameraMode() const
 {
 	const APawn* Pawn = GetPawn<APawn>();
 
-	//HeroComponent's Owner is not existed, return nullptr
+	//HeroComponent가 Owner Pawn이 없다면 nullptr
 	if (!Pawn)
 	{
 		return nullptr;
 	}
 
-	//Find HeroComponent's Owner PawnExtComponent
+	//HeroComponent's OwnerPawn's ExtComp for Get PawnData
 	if (UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
 	{
+		//for Get DefaultCameraMode of PawnClass
 		if (const UPFPawnData* PawnData = PawnExtComp->GetPawnData<UPFPawnData>())
 		{
 			return PawnData->DefaultCameraMode;
 		}
+
 	}
 
 	return nullptr;

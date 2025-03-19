@@ -6,6 +6,7 @@
 #include "PFCameraMode.h"
 #include "PFCameraMode_ThirdPerson.generated.h"
 
+class UCurveVector;
 /**
  * 
  */
@@ -17,4 +18,11 @@ class PF_API UPFCameraMode_ThirdPerson : public UPFCameraMode
 public:
 
 	UPFCameraMode_ThirdPerson(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
+	virtual void UpdateView(float DeltaTime) override;
+
+	//UCurveVector* TargetOffSetCurveNative;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Third Person")
+	TObjectPtr<const UCurveVector> TargetOffSetCurve;
 };

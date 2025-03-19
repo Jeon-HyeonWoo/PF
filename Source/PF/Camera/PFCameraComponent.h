@@ -22,11 +22,6 @@ class PF_API UPFCameraComponent : public UCameraComponent
 public:
 
 	UPFCameraComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
-	static UPFCameraComponent* FindCameraComponent(const AActor* Actor)
-	{
-		return (Actor ? Actor->FindComponentByClass<UPFCameraComponent>() : nullptr);
-	}
 	/*
 	* CameraCompoent Interface
 	*/
@@ -35,6 +30,11 @@ public:
 
 public:
 
+	static UPFCameraComponent* FindCameraComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UPFCameraComponent>() : nullptr);
+	}
+	AActor* GetTargetActor() const { return GetOwner(); }
 	void UpdateCameraModes();
 
 public:

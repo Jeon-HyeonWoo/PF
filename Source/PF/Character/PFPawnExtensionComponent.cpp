@@ -15,43 +15,17 @@ UPFPawnExtensionComponent::UPFPawnExtensionComponent(const FObjectInitializer& O
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UPFPawnExtensionComponent::SetPawnData(const UPFPawnData* InPawnData)
-{
-	APawn* Pawn = GetPawnChecked<APawn>();
-	if (Pawn->GetLocalRole() != ROLE_Authority)
-	{
-		return;
-	}
-
-	if (PawnData)
-	{
-		return;
-	}
-
-	PawnData = InPawnData;
-
-}
-
-void UPFPawnExtensionComponent::SetupPlayerInputComponent()
-{
-	CheckDefaultInitialization();
-}
-
 void UPFPawnExtensionComponent::OnRegister()
 {
 	Super::OnRegister();
 
+	if (!GetPawn<APawn>())
 	{
-		if (!GetPawn<APawn>())
-		{
-			UE_LOG(PFLog, Error, TEXT("this component has been added to a bp whose base class is not a pawn"));
-			return;
-		}
+		UE_LOG(PFLog, Error, TEXT("this Component has been added to a BP Whose base class is not a Pawn!"));
+		return;
 	}
 
-	//for Use to GameFrameworkManager's RegisterInitState Step
 	RegisterInitStateFeature();
-
 
 	UGameFrameworkComponentManager* Manager = UGameFrameworkComponentManager::GetForActor(GetOwningActor());
 }
@@ -59,30 +33,22 @@ void UPFPawnExtensionComponent::OnRegister()
 void UPFPawnExtensionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	/*
-	* Delegate
-	* Observe Component range : Name_None = All Component,
-	* Observe tag state range : receive all tags
-	*/
-	BindOnActorInitStateChanged(NAME_None, FGameplayTag(), false); // OnActorInitStateChanged()
+
+	BindOnActorInitStateChanged(NAME_None, FGameplayTag(), false);
 
 	ensure(TryToChangeInitState(FPFGameplayTags::Get().InitState_Spawned));
 
-	//ForceUpdateInitState
 	CheckDefaultInitialization();
 }
 
 void UPFPawnExtensionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	UnregisterInitStateFeature();
-
 	Super::EndPlay(EndPlayReason);
 }
 
 void UPFPawnExtensionComponent::OnActorInitStateChanged(const FActorInitStateChangedParams& Params)
 {
-	//same if(Registed Other Components)
 	if (Params.FeatureName != Name_ActorFeatureName)
 	{
 		const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
@@ -113,26 +79,25 @@ bool UPFPawnExtensionComponent::CanChangeInitState(UGameFrameworkComponentManage
 	{
 		if (!PawnData)
 		{
+			UE_LOG(PFLog, Error, TEXT("PawnData is not set!"));
 			return false;
 		}
-
 		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
 		if (bIsLocallyControlled)
 		{
 			if (!GetController<AController>())
 			{
+				UE_LOG(PFLog, Error, TEXT("Pawn has no Controller!"));
 				return false;
 			}
 		}
 
 		return true;
 	}
-	
+
 	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
 	{
-		/*
-		* Pawn에 부착된 모든 Feature들이 InitState의 지점에 도착하면 true를 반환
-		*/
+		UE_LOG(PFLog, Log, TEXT("CanChangeInitState: %s -> %s"), *CurrentState.ToString(), *DesiredState.ToString());
 		return Manager->HaveAllFeaturesReachedInitState(Pawn, InitTags.InitState_DataAvailable);
 	}
 
@@ -141,8 +106,8 @@ bool UPFPawnExtensionComponent::CanChangeInitState(UGameFrameworkComponentManage
 		return true;
 	}
 
+
 	return false;
-	
 }
 
 void UPFPawnExtensionComponent::CheckDefaultInitialization()
@@ -159,4 +124,26 @@ void UPFPawnExtensionComponent::CheckDefaultInitialization()
 	};
 
 	ContinueInitStateChain(StateChain);
+}
+
+void UPFPawnExtensionComponent::SetPawnData(const UPFPawnData* InPawnData)
+{
+	APawn* Pawn = GetPawnChecked<APawn>();
+
+	if (Pawn->GetLocalRole() != ROLE_Authority)
+	{
+		return;
+	}
+
+	if (PawnData)
+	{
+		return;
+	}
+
+	PawnData = InPawnData;
+}
+
+void UPFPawnExtensionComponent::SetupPlayerInputComponent()
+{
+	CheckDefaultInitialization();
 }
