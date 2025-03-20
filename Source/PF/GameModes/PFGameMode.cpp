@@ -15,7 +15,7 @@
 APFGameMode::APFGameMode()
 {
 	GameStateClass = APFGameState::StaticClass();
-	PlayerControllerClass = APlayerController::StaticClass();
+	PlayerControllerClass = APFPlayerController::StaticClass();
 	PlayerStateClass = APFPlayerState::StaticClass();
 	DefaultPawnClass = APFCharacter::StaticClass();
 }

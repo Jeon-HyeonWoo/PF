@@ -299,7 +299,7 @@ void UPFHeroComponent::Input_LookMouse(const FInputActionValue& InputActionValue
 	if (Value.Y != 0.0f)
 	{
 		double AnimInversionValue = -Value.Y;
-		Pawn->AddControllerPitchInput(AnimInversionValue)
+		Pawn->AddControllerPitchInput(AnimInversionValue);
 	}
 
 }
