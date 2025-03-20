@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "Components/PawnComponent.h"
 #include "Components/GameFrameworkInitStateInterface.h"
+#include "PF/Input/PFMappableConfigPair.h"
 #include "PFHeroComponent.generated.h"
 
 class UPFCameraMode;
+struct FInputActionValue;
 
 /**
  * Component that sets input and camera handling for player controlled pawns (or bots that simulate players)
@@ -27,6 +29,7 @@ public:
 	* Define FeatureName
 	*/
 	static const FName Name_ActorFeatureName;
+	static const FName Name_BindInputsNow;
 
 	/* 
 	* UPawnComponent Interface
@@ -48,5 +51,16 @@ public:
 
 public:
 
+	//for CameraMode Handle
 	TSubclassOf<UPFCameraMode> DetermineCameraMode() const;
+	//for Input Handle
+	void InitializePlayerInput(UInputComponent* PlayerInputComponent);
+
+	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_LookMouse(const FInputActionValue& InputActionValue);
+
+public:
+
+	UPROPERTY(EditAnywhere)
+	TArray<FPFMappableConfigPair> DefaultInputConfigs;
 };

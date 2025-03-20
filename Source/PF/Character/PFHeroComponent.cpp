@@ -8,10 +8,21 @@
 #include "PF/Character/PFPawnData.h"
 #include "PF/Player/PFPlayerState.h"
 #include "Components/GameFrameworkComponentManager.h"
+//Camera
 #include "PF/Camera/PFCameraMode.h"
 #include "PF/Camera/PFCameraComponent.h"
+//Input
+#include "PF/Player/PFPlayerController.h"
+#include "PF/Input/PFEnhancedInputComponent.h"
+#include "PF/Input/PFInputConfig.h"
+#include "PF/Input/PFMappableConfigPair.h"
+#include "PlayerMappableInputConfig.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
+
 
 const FName UPFHeroComponent::Name_ActorFeatureName("HeroComponent");
+const FName UPFHeroComponent::Name_BindInputsNow("BindInputsNow");
 
 UPFHeroComponent::UPFHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -144,7 +155,14 @@ void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Man
 		}
 
 		//Input Handling
-		
+		if (APFPlayerController* PFPC = GetController<APFPlayerController>())
+		{
+			if (Pawn->InputComponent != nullptr)
+			{
+				InitializePlayerInput(Pawn->InputComponent);
+			}
+		}
+
 	}
 }
 
@@ -184,4 +202,104 @@ TSubclassOf<UPFCameraMode> UPFHeroComponent::DetermineCameraMode() const
 	}
 
 	return nullptr;
+}
+
+void UPFHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputComponent)
+{
+	check(PlayerInputComponent);
+
+	const APawn* Pawn = GetPawn<APawn>();
+	if (!Pawn)
+	{
+		return;
+	}
+
+	const APlayerController* PC = Pawn->GetController<APlayerController>();
+	check(PC);
+
+	const ULocalPlayer* LP = PC->GetLocalPlayer();
+	check(LP);
+
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	check(Subsystem);
+
+	Subsystem->ClearAllMappings();
+
+	if (const UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+	{
+		if (const UPFPawnData* PawnData = PawnExtComp->GetPawnData<UPFPawnData>())
+		{
+			if (const UPFInputConfig* InputConfig = PawnData->InputConfig)
+			{
+				const FPFGameplayTags& GameplayTags = FPFGameplayTags::Get();
+
+				for (const FPFMappableConfigPair& Pair : DefaultInputConfigs)
+				{
+					FModifyContextOptions Options = { };
+					Options.bIgnoreAllPressedKeysUntilRelease = false;
+
+					Subsystem->AddPlayerMappableConfig(Pair.Config.LoadSynchronous(), Options);
+				}
+
+				UPFEnhancedInputComponent* PFIC = CastChecked<UPFEnhancedInputComponent>(PlayerInputComponent);
+				{
+					PFIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, false);
+					PFIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_LookMouse, false);
+				}
+				
+			}
+		}
+	}
+}
+
+void UPFHeroComponent::Input_Move(const FInputActionValue& InputActionValue)
+{
+	APawn* Pawn = GetPawn<APawn>();
+	AController* Controller = Pawn ? Pawn->GetController() : nullptr;
+
+	if (Controller)
+	{
+		const FVector2D Value = InputActionValue.Get<FVector2D>();
+		const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
+
+		//X : Right, Left
+		if (Value.X != 0.0f)
+		{
+			const FVector MovementDirection = MovementRotation.RotateVector(FVector::RightVector);
+
+			Pawn->AddMovementInput(MovementDirection, Value.X);
+		}
+
+		if (Value.Y != 0.0f)
+		{
+			const FVector MovementDirection = MovementRotation.RotateVector(FVector::ForwardVector);
+
+			Pawn->AddMovementInput(MovementDirection, Value.Y);
+		}
+	}
+}
+
+void UPFHeroComponent::Input_LookMouse(const FInputActionValue& InputActionValue)
+{
+	APawn* Pawn = GetPawn<APawn>();
+
+	if (!Pawn)
+	{
+		return; 
+	}
+
+	const FVector2D Value = InputActionValue.Get<FVector2D>();
+
+	//Yaw = Horizontal
+	if (Value.X != 0.0f)
+	{
+		Pawn->AddControllerYawInput(Value.X);
+	}
+
+	if (Value.Y != 0.0f)
+	{
+		double AnimInversionValue = -Value.Y;
+		Pawn->AddControllerPitchInput(AnimInversionValue)
+	}
+
 }

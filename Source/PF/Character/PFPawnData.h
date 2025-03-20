@@ -7,6 +7,7 @@
 #include "PFPawnData.generated.h"
 
 class UPFCameraMode;
+class UPFInputConfig;
 /**
  * 
  */
@@ -26,4 +27,7 @@ public:
 	/* Camera */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PF|Camera")
 	TSubclassOf<UPFCameraMode> DefaultCameraMode;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PF|InputConfig")
+	TObjectPtr<UPFInputConfig> InputConfig;
 };
