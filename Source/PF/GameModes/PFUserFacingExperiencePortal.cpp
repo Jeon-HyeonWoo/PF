@@ -6,6 +6,8 @@
 #include "Components/TextRenderComponent.h"
 #include "PF/GameModes/PFExperienceList.h"
 #include "PF/GameModes/PFUserFacingExperience.h"
+#include "Kismet/GameplayStatics.h"
+#include "PF/PFLogChannels.h"
 
 // Sets default values
 APFUserFacingExperiencePortal::APFUserFacingExperiencePortal()
@@ -28,13 +30,26 @@ APFUserFacingExperiencePortal::APFUserFacingExperiencePortal()
 void APFUserFacingExperiencePortal::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	SetActorEnableCollision(false);
 	SetActorHiddenInGame(true);
 
-	APFExperienceList& List = APFExperienceList::Get();
-	List.OnUserFacingExperienceLoaded.AddUObject(this, &ThisClass::SetActorActivate);
-	
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APFExperienceList::StaticClass(), FoundActors);
+
+	if (FoundActors.Num() > 0)
+	{
+		APFExperienceList* List = Cast<APFExperienceList>(FoundActors[0]);
+		if (!List)
+		{
+			UE_LOG(PFLog, Error, TEXT("Can not Found UserExperienceList"));
+		}
+		else
+		{
+			List->OnUserFacingExperienceLoaded.AddUObject(this, &ThisClass::SetActorActivate);
+		}
+	} 
+
 }
 
 // Called every frame

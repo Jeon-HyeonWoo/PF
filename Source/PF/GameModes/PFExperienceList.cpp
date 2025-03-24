@@ -7,7 +7,6 @@
 #include "Kismet/KismetArrayLibrary.h"
 #include "PF/System/PFAssetManager.h"
 
-APFExperienceList APFExperienceList::SingleTon;
 
 // Sets default values
 APFExperienceList::APFExperienceList()

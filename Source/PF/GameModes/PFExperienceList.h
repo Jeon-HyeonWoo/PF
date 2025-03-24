@@ -19,8 +19,6 @@ public:
 	// Sets default values for this actor's properties
 	APFExperienceList();
 
-	static APFExperienceList& Get() { return SingleTon; }
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -46,9 +44,5 @@ public:
 
 private:
 
-	static APFExperienceList SingleTon;
-
 	bool bUserFacingExperienceLoaded = false;
-
-
 };
