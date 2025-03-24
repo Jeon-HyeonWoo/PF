@@ -8,6 +8,8 @@
 
 class UPFUserFacingExperience;
 
+DECLARE_MULTICAST_DELEGATE(FOnUserFacingExperienceLoaded);
+
 UCLASS()
 class PF_API APFExperienceList : public AActor
 {
@@ -16,6 +18,8 @@ class PF_API APFExperienceList : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APFExperienceList();
+
+	static APFExperienceList& Get() { return SingleTon; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,11 +33,22 @@ public:
 
 	void UserFacingExperienceLoaded();
 	
+	bool IsUserFacingExperienceLoaded() { return bUserFacingExperienceLoaded; };
+	
 public:
 
 	TArray<FPrimaryAssetId> ExperienceIdList;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	TArray<UPFUserFacingExperience*> ExperienceList;
+
+	FOnUserFacingExperienceLoaded OnUserFacingExperienceLoaded;
+
+private:
+
+	static APFExperienceList SingleTon;
+
+	bool bUserFacingExperienceLoaded = false;
+
 
 };

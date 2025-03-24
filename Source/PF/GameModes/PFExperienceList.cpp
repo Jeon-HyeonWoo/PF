@@ -7,6 +7,8 @@
 #include "Kismet/KismetArrayLibrary.h"
 #include "PF/System/PFAssetManager.h"
 
+APFExperienceList APFExperienceList::SingleTon;
+
 // Sets default values
 APFExperienceList::APFExperienceList()
 {
@@ -37,7 +39,6 @@ void APFExperienceList::BeginPlay()
 void APFExperienceList::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APFExperienceList::UserFacingExperienceLoaded()
@@ -54,5 +55,10 @@ void APFExperienceList::UserFacingExperienceLoaded()
 			}
 		}
 	}
+	bUserFacingExperienceLoaded = true;
+
+	OnUserFacingExperienceLoaded.Broadcast();
 }
+
+
 
