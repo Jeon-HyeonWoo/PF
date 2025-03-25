@@ -61,8 +61,12 @@ void APFUserFacingExperiencePortal::Tick(float DeltaTime)
 
 void APFUserFacingExperiencePortal::SetActorActivate()
 {
+	FString MapIdOnly;
+	FString FullPath = DesireExperience->MapId.PrimaryAssetName.ToString();
+	FullPath.Split(TEXT("/"), nullptr, &MapIdOnly, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
+
 	SetActorEnableCollision(true);
 	SetActorHiddenInGame(false);
-	TextRenderComponent->SetText(FText::FromName(DesireExperience->MapId.PrimaryAssetName));
+	TextRenderComponent->SetText(FText::FromString(MapIdOnly));
 }
 
