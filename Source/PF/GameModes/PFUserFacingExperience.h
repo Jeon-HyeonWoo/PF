@@ -6,6 +6,8 @@
 #include "Engine/DataAsset.h"
 #include "PFUserFacingExperience.generated.h"
 
+
+class UCommonSession_HostSessionRequest;
 /**
  * 
  */
@@ -13,7 +15,13 @@ UCLASS()
 class PF_API UPFUserFacingExperience : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
-	
+
+
+public:
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = false)
+	UCommonSession_HostSessionRequest* CreateHostingRequest() const;
+
 public:
 
 

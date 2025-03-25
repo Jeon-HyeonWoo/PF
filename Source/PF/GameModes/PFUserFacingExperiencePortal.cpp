@@ -23,6 +23,7 @@ APFUserFacingExperiencePortal::APFUserFacingExperiencePortal()
 
 	{
 		TextRenderComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextRender"));
+		TextRenderComponent->SetupAttachment(PortalCollision);
 	}
 }
 
