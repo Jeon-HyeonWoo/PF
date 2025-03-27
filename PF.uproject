@@ -43,6 +43,10 @@
 			"SupportedTargetPlatforms": [
 				"Win64"
 			]
+		},
+		{
+			"Name": "InGame",
+			"Enabled": true
 		}
 	]
 }
