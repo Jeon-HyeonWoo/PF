@@ -7,6 +7,8 @@
 #include "PFExperienceDefinition.generated.h"
 
 class UPFPawnData;
+class UPFExperienceActionSet;
+class UGameFeatureAction;
 /**
  * 
  */
@@ -22,6 +24,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
 	TObjectPtr<UPFPawnData> DefaultPawnData;
 
+public:
+	//GameFeatures
+
+	/* Which GameFeature to Activate */
 	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
 	TArray<FString> GameFeaturesToEnable;
+
+	/* Which GameFeature Action to Activate */
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+	TArray<TObjectPtr<UPFExperienceActionSet>> ActionSets;
+	
+	/*  */
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+	TArray<TObjectPtr<UGameFeatureAction>> Actions;
 };
