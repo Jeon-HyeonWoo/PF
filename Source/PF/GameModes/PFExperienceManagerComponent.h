@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/GameStateComponent.h"
+#include "GameFeaturePluginOperationResult.h"
 #include "PFExperienceManagerComponent.generated.h"
 
 class UPFExperienceDefinition;
@@ -12,6 +13,7 @@ enum class EPFExperienceLoadState
 {
 	Unload,
 	Loading,
+	LoadingGameFeature,
 	Loaded,
 	Deactivating,
 };
@@ -45,6 +47,9 @@ public:
 	/* call experience loaded with out problems, Experience and other things load*/
 	void OnExperienceLoadComplete();
 
+	/* All OnGameFeature Load Completed, Call Experience Full Load */
+	void OnGameFeaturePluginLoadCompelete(const UE::GameFeatures::FResult& Result);
+
 	/* BoardCast Experience Load Complete */
 	void OnExperienceFullLoadCompleted();
 
@@ -57,4 +62,10 @@ public:
 	EPFExperienceLoadState LoadState = EPFExperienceLoadState::Unload;
 
 	FOnPFExperienceLoaded OnExperienceLoaded;
+
+public:
+	//GameFeatures Activate
+	int32 NumGameFeaturePluginsLoading = 0;
+	TArray<FString> GameFeaturePluginURLs;
+
 };

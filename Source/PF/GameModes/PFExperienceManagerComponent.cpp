@@ -2,9 +2,11 @@
 
 
 #include "PFExperienceManagerComponent.h"
-#include "PF/System/PFAssetManager.h"
-#include "PF/GameModes/PFExperienceDefinition.h"
+#include "PF/System/PFAssetManager.h"				//For Load
+#include "PF/GameModes/PFExperienceDefinition.h"	//Manged obj
+//GameFeature
 #include "GameFeaturesSubsystemSettings.h"
+#include "GameFeaturesSubsystem.h"
 
 
 void UPFExperienceManagerComponent::CallOrRegister_OnExperienceLoaded(FOnPFExperienceLoaded::FDelegate&& Delegate)
@@ -97,13 +99,60 @@ void UPFExperienceManagerComponent::StartExperienceLoad()
 			}
 		));
 	}
+
+	static int32 StartExperienceLoad_FrameNumber = GFrameNumber;
 }
 
 void UPFExperienceManagerComponent::OnExperienceLoadComplete()
 {
 	static int32 OnExperienceLoadComplete_FrameNumber = GFrameNumber;
 
-	OnExperienceFullLoadCompleted();
+	check(LoadState == EPFExperienceLoadState::Loading);
+	check(CurrentExperience);
+
+	GameFeaturePluginURLs.Reset();
+
+	auto CollectGameFeaturePluginURLs = [This = this](const UPrimaryDataAsset* Context, const TArray<FString>& FeaturePluginList)
+		{
+			for (const FString& PluginName : FeaturePluginList)
+			{
+				FString PluginURL;
+				if (UGameFeaturesSubsystem::Get().GetPluginURLByName(PluginName, PluginURL))
+				{
+					This->GameFeaturePluginURLs.AddUnique(PluginURL);
+				}
+			}
+		};
+
+	CollectGameFeaturePluginURLs(CurrentExperience, CurrentExperience->GameFeaturesToEnable);
+
+	NumGameFeaturePluginsLoading = GameFeaturePluginURLs.Num();
+	if (NumGameFeaturePluginsLoading)
+	{
+		LoadState = EPFExperienceLoadState::LoadingGameFeature;
+		for (const FString& PluginURL : GameFeaturePluginURLs)
+		{
+			/*
+			* Load GameFeature and Activate
+			*/
+			UGameFeaturesSubsystem::Get().LoadAndActivateGameFeaturePlugin(PluginURL, FGameFeaturePluginLoadComplete::CreateUObject(this, &ThisClass::OnGameFeaturePluginLoadCompelete));
+		}
+	}
+	else //Experience Definition has no GameFeatures
+	{
+		OnExperienceFullLoadCompleted();
+	}
+
+}
+
+void UPFExperienceManagerComponent::OnGameFeaturePluginLoadCompelete(const UE::GameFeatures::FResult& Result)
+{
+	NumGameFeaturePluginsLoading--;
+	if (NumGameFeaturePluginsLoading == 0)
+	{
+		OnExperienceFullLoadCompleted();
+	}
+	
 }
 
 void UPFExperienceManagerComponent::OnExperienceFullLoadCompleted()

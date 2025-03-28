@@ -22,5 +22,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
 	TObjectPtr<UPFPawnData> DefaultPawnData;
 
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
 	TArray<FString> GameFeaturesToEnable;
 };

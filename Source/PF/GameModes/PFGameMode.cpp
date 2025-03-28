@@ -10,6 +10,7 @@
 #include "PF/GameModes/PFExperienceManagerComponent.h"
 #include "PF/GameModes/PFExperienceDefinition.h"
 #include "PF/Character/PFPawnExtensionComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 APFGameMode::APFGameMode()
@@ -91,6 +92,12 @@ void APFGameMode::HandleMatchAssignmentIfNotExpectingOne()
 	FPrimaryAssetId ExperienceId;
 
 	UWorld* World = GetWorld();
+
+	if (!ExperienceId.IsValid() && UGameplayStatics::HasOption(OptionsString, TEXT("Experience")))
+	{
+		const FString ExperienceFromOptions = UGameplayStatics::ParseOption(OptionsString, TEXT("Experience"));
+		ExperienceId = FPrimaryAssetId(FPrimaryAssetType(*UPFExperienceDefinition::StaticClass()->GetName()), FName(*ExperienceFromOptions));
+	}
 
 	if (!ExperienceId.IsValid())
 	{
