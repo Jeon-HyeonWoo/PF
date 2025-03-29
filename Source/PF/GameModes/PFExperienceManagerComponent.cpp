@@ -7,6 +7,9 @@
 //GameFeature
 #include "GameFeaturesSubsystemSettings.h"
 #include "GameFeaturesSubsystem.h"
+#include "PF/GameModes/PFExperienceActionSet.h"
+#include "GameFeatureAction.h"
+
 
 
 void UPFExperienceManagerComponent::CallOrRegister_OnExperienceLoaded(FOnPFExperienceLoaded::FDelegate&& Delegate)
@@ -158,6 +161,43 @@ void UPFExperienceManagerComponent::OnGameFeaturePluginLoadCompelete(const UE::G
 void UPFExperienceManagerComponent::OnExperienceFullLoadCompleted()
 {
 	check(LoadState != EPFExperienceLoadState::Loaded);
+
+	//Experience's variables Actions and ActionSet Register, Load, activate 
+	{
+		LoadState = EPFExperienceLoadState::ExecutingActions;
+		
+		FGameFeatureActivatingContext Context;
+
+		{
+			const FWorldContext* ExistingWorldContext = GEngine->GetWorldContextFromWorld(GetWorld());
+			if (ExistingWorldContext)
+			{
+				Context.SetRequiredWorldContextHandle(ExistingWorldContext->ContextHandle);
+			}
+		}
+
+		auto ActivateListOfActions = [&Context](const TArray<UGameFeatureAction*>& ActionList)
+			{
+				for (UGameFeatureAction* Action : ActionList)
+				{
+					if (Action)
+					{
+						Action->OnGameFeatureRegistering();			//Action Register
+						Action->OnGameFeatureLoading();				//Action loading
+						Action->OnGameFeatureActivating(Context);	//Hand over to context(world context) reigsted and loaded action
+					}
+				}
+			};
+
+
+		ActivateListOfActions(CurrentExperience->Actions);
+
+		for (const TObjectPtr<UPFExperienceActionSet>& ActionSet : CurrentExperience->ActionSets)
+		{
+			ActivateListOfActions(ActionSet->Actions);
+		}
+	}
+
 
 	LoadState = EPFExperienceLoadState::Loaded;
 	OnExperienceLoaded.Broadcast(CurrentExperience);

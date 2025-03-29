@@ -14,6 +14,7 @@ enum class EPFExperienceLoadState
 	Unload,
 	Loading,
 	LoadingGameFeature,
+	ExecutingActions,	//GameFeatures action
 	Loaded,
 	Deactivating,
 };
@@ -50,7 +51,7 @@ public:
 	/* All OnGameFeature Load Completed, Call Experience Full Load */
 	void OnGameFeaturePluginLoadCompelete(const UE::GameFeatures::FResult& Result);
 
-	/* BoardCast Experience Load Complete */
+	/* BoardCast Experience Load Complete, GameFeature is Guaranteed to be activated, start to Gemefeature action activate */
 	void OnExperienceFullLoadCompleted();
 
 	const UPFExperienceDefinition* GetCurrentExperienceChecked() const;
