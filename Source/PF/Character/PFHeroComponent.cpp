@@ -250,6 +250,8 @@ void UPFHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompone
 			}
 		}
 	}
+
+	UGameFrameworkComponentManager::SendGameFrameworkComponentExtensionEvent(const_cast<APawn*>(Pawn), Name_BindInputsNow);
 }
 
 void UPFHeroComponent::Input_Move(const FInputActionValue& InputActionValue)
