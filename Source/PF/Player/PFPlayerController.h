@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "ModularPlayerController.h"
 #include "PFPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PF_API APFPlayerController : public APlayerController
+class PF_API APFPlayerController : public AModularPlayerController
 {
 	GENERATED_BODY()
 

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "ModularCharacter.h"
 #include "PFCharacter.generated.h"
 
 class UPFPawnExtensionComponent;
 class UPFCameraComponent;
 
 UCLASS()
-class PF_API APFCharacter : public ACharacter
+class PF_API APFCharacter : public AModularCharacter
 {
 	GENERATED_BODY()
 

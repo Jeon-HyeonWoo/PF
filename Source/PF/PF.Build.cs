@@ -18,6 +18,7 @@ public class PF : ModuleRules
 			"ModularGameplay",
 			"GameFeatures",
 			"CommonUser", //Custom PlugIn : for move to other userfacingexperience;
+			"ModularGameplayActors",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
