@@ -47,6 +47,10 @@
 		{
 			"Name": "InGame",
 			"Enabled": true
+		},
+		{
+			"Name": "AnimationWarping",
+			"Enabled": true
 		}
 	]
 }
