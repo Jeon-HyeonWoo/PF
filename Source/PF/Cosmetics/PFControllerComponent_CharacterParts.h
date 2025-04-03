@@ -23,13 +23,13 @@ struct FPFControllerCharacterPartEntry
 };
 
 UCLASS(meta = (BlueprintSpawnableComponent))
-class PF_API UPControllerComponent_CharacterParts : public UControllerComponent
+class PF_API UPFControllerComponent_CharacterParts : public UControllerComponent
 {
 	GENERATED_BODY()
 	
 public:
 
-	UPControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UPFControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 public:
 

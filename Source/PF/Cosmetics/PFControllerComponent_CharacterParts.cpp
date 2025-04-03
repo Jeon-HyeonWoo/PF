@@ -3,7 +3,7 @@
 
 #include "PFControllerComponent_CharacterParts.h"
 
-UPControllerComponent_CharacterParts::UPControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer)
+UPFControllerComponent_CharacterParts::UPFControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 }
