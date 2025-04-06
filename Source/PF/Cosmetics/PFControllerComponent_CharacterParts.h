@@ -31,6 +31,8 @@ class PF_API UPFControllerComponent_CharacterParts : public UControllerComponent
 public:
 
 	UPFControllerComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 
@@ -40,6 +42,11 @@ public:
 	void AddCharacterPart(const FPFCharacterPart& NewPart);
 
 	void AddCharacterPartInternal(const FPFCharacterPart& NewPart);
+
+	void RemoveAllCharacterParts();
+
+	UFUNCTION()
+	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
 
 public:
 
