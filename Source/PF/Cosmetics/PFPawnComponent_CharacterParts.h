@@ -41,6 +41,17 @@ public:
 
 public:
 
+	bool SpawnActorForEntry(FPFAppliedCharacterPartEntry& Entry);
+	void DestroyActorForEntry(FPFAppliedCharacterPartEntry& Entry);
+
+	FPFCharacterPartHandle AddEntry(FPFCharacterPart NewPart); 
+	void RemoveEntry(FPFCharacterPartHandle Handle);
+
+
+	FGameplayTagContainer CollectCombindTags() const;
+
+public:
+
 	UPROPERTY()
 	TArray<FPFAppliedCharacterPartEntry> Entries;
 
@@ -58,6 +69,16 @@ class PF_API UPFPawnComponent_CharacterParts : public UPawnComponent
 public:
 
 	UPFPawnComponent_CharacterParts(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+public:
+
+	USkeletalMeshComponent* GetParentMeshComponent() const;
+	USceneComponent* GetSceneComponentToAttachTo() const;
+	FGameplayTagContainer GetCombindTags(FGameplayTag RequiredPrefix) const;
+	void BroadcastChanged();
+
+	FPFCharacterPartHandle AddCharacterPart(const FPFCharacterPart& NewPart);
+	void RemoveCharaterPart(FPFCharacterPartHandle Handle);
 
 public:
 

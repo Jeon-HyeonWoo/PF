@@ -28,6 +28,8 @@ struct FPFAnimBodyStyleSelectionSet
 {
 	GENERATED_BODY()
 
+	USkeletalMesh* SelectBestBodyStyle(const FGameplayTagContainer& CosmeticTags) const;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FPFAnimBodyStyleSelectionEntry> MeshRules;
 

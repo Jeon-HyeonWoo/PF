@@ -10,6 +10,7 @@
 /**
  * 
  */
+class UPFPawnComponent_CharacterParts;
 
 USTRUCT()
 struct FPFControllerCharacterPartEntry
@@ -33,6 +34,15 @@ public:
 
 public:
 
+	UPFPawnComponent_CharacterParts* GetPawnCustomizer() const;
+
+	UFUNCTION(BlueprintCallable, Category = Cosmetic)
+	void AddCharacterPart(const FPFCharacterPart& NewPart);
+
+	void AddCharacterPartInternal(const FPFCharacterPart& NewPart);
+
+public:
+
 	UPROPERTY(EditAnywhere, Category = Cosmetic)
-	TArray<FPFControllerCharacterPartEntry> CaracterParts;
+	TArray<FPFControllerCharacterPartEntry> CharacterParts;
 };
