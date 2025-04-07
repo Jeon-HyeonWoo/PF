@@ -9,6 +9,33 @@
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FPFAnimLayerSelectionEntry
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> Layer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTagContainer RequiredTags;
+
+};
+
+USTRUCT(BlueprintType)
+struct FPFAnimLayerSelectionSet
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FPFAnimLayerSelectionEntry> LayerRules;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> DefaultLayer;
+
+};
+
 USTRUCT(BlueprintType)
 struct FPFAnimBodyStyleSelectionEntry
 {
