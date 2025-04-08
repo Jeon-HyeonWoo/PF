@@ -13,5 +13,16 @@ UCLASS(BlueprintType, Blueprintable)
 class PF_API UPFEquipmentInstance : public UObject
 {
 	GENERATED_BODY()
+
+public:
+
+	UPFEquipmentInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
+public:
+
+	UPROPERTY()
+	TObjectPtr<UObject> Instigator;
+
+	UPROPERTY()
+	TArray<TObjectPtr<AActor>> SpawnedActors;
 };

@@ -3,3 +3,7 @@
 
 #include "PFEquipmentInstance.h"
 
+UPFEquipmentInstance::UPFEquipmentInstance(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+}
