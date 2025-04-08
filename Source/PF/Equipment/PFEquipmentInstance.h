@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class PF_API UPFEquipmentInstance : public UObject
 {
 	GENERATED_BODY()
