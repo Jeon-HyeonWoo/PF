@@ -3,3 +3,8 @@
 
 #include "PFEquipmentManagerComponent.h"
 
+UPFEquipmentManagerComponent::UPFEquipmentManagerComponent(const FObjectInitializer& ObjectIntializer)
+	: Super(ObjectIntializer)
+	, EuqipmentList(this)
+{
+}

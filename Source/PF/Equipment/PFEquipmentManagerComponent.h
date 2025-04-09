@@ -9,9 +9,50 @@
 /**
  * 
  */
+class UPFEquipmentDefinition;
+class UPFEquipmentInstance;
+
+USTRUCT(BlueprintType)
+struct FPFAppliedEquipmentEntry
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition;
+
+	UPROPERTY()
+	TObjectPtr<UPFEquipmentInstance> Instance = nullptr;
+};
+
+USTRUCT(BlueprintType)
+struct FPFEquipmentList
+{
+	GENERATED_BODY()
+
+	FPFEquipmentList(UActorComponent* InOwnerComponent = nullptr)
+		: OwnerComponent(InOwnerComponent)
+	{
+
+	}
+
+	UPROPERTY()
+	TArray<FPFAppliedEquipmentEntry> Entries;
+
+	UPROPERTY()
+	TObjectPtr<UActorComponent> OwnerComponent;
+};
+
 UCLASS()
 class PF_API UPFEquipmentManagerComponent : public UPawnComponent
 {
 	GENERATED_BODY()
 	
+public:
+
+	UPFEquipmentManagerComponent(const FObjectInitializer& ObjectIntializer = FObjectInitializer::Get());
+
+public:
+
+	UPROPERTY()
+	FPFEquipmentList EuqipmentList;
 };

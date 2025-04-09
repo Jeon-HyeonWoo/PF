@@ -3,3 +3,7 @@
 
 #include "PFQuickBarComponent.h"
 
+UPFQuickBarComponent::UPFQuickBarComponent(const FObjectInitializer& ObjectIntializer)
+	: Super(ObjectIntializer)
+{
+}
