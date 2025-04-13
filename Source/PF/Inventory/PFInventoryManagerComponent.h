@@ -30,6 +30,8 @@ struct FPFInventoryList
 
 	}
 
+	UPFInventoryItemInstance* AddEntry(TSubclassOf<UPFInventoryItemDefinition> ItemDef);
+
 	UPROPERTY()
 	TArray<FPFInventoryEntry> Entries;
 
@@ -47,7 +49,15 @@ class PF_API UPFInventoryManagerComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
+
 	UPFInventoryManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	UPFInventoryItemInstance* AddItemDefinition(TSubclassOf<UPFInventoryItemDefinition> ItemDef);
+
+public:
 
 	UPROPERTY()
 	FPFInventoryList InventoryList;

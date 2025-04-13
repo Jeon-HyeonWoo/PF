@@ -27,7 +27,7 @@ struct FPFEquipmentActorToSpawn
 	FTransform AttachTransform;
 };
 
-UCLASS()
+UCLASS(Blueprintable)
 class PF_API UPFEquipmentDefinition : public UObject
 {
 	GENERATED_BODY()

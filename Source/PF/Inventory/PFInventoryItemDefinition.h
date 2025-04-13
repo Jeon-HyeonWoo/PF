@@ -20,7 +20,7 @@ public:
 
 };
 
-UCLASS()
+UCLASS(Blueprintable)
 class PF_API UPFInventoryItemDefinition : public UObject
 {
 	GENERATED_BODY()

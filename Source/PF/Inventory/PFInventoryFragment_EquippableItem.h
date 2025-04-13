@@ -19,6 +19,7 @@ class PF_API UPFInventoryFragment_EquippableItem : public UPFInventroyItemFragme
 
 public:
 
-	
+	UPROPERTY(EditAnywhere, Category = PF) 
+	TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition;
 	
 };

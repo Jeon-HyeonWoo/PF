@@ -22,6 +22,13 @@ public:
 
 	UPFQuickBarComponent(const FObjectInitializer& ObjectIntializer = FObjectInitializer::Get());
 
+	virtual void BeginPlay() override;
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void AddItemSlot(int32 SlotIndex, UPFInventoryItemInstance* Item);
+
 public:
 
 	/* QuickBar Default Slot Number */
