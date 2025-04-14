@@ -21,7 +21,7 @@ struct FPFEquipmentActorToSpawn
 	TSubclassOf<AActor> ActorToSpawn;
 
 	UPROPERTY(EditAnywhere, Category = Equipment)
-	FName AttackSocket;
+	FName AttachSocket;
 
 	UPROPERTY(EditAnywhere, Category = Equipment)
 	FTransform AttachTransform;
@@ -42,5 +42,5 @@ public:
 	TSubclassOf<UPFEquipmentInstance> InstanceType;
 
 	UPROPERTY(EditDefaultsOnly, Category = Equipment)
-	TArray<FPFEquipmentActorToSpawn> ActorToSpawn;
+	TArray<FPFEquipmentActorToSpawn> ActorsToSpawn;
 };

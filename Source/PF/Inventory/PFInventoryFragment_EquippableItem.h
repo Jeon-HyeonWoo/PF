@@ -13,7 +13,7 @@
 class UPFEquipmentDefinition;
 
 UCLASS()
-class PF_API UPFInventoryFragment_EquippableItem : public UPFInventroyItemFragment
+class PF_API UPFInventoryFragment_EquippableItem : public UPFInventoryItemFragment
 {
 	GENERATED_BODY()
 

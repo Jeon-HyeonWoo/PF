@@ -9,6 +9,7 @@
  * 
  */
 class UPFInventoryItemDefinition;
+class UPFInventoryItemFragment;
 
 UCLASS()
 class PF_API UPFInventoryItemInstance : public UObject
@@ -18,6 +19,15 @@ class PF_API UPFInventoryItemInstance : public UObject
 public:
 
 	UPFInventoryItemInstance(const FObjectInitializer& ObjectIntializer = FObjectInitializer::Get());
+
+public:
+	const UPFInventoryItemFragment* FindFragmentByClass(TSubclassOf<UPFInventoryItemFragment> FragmentClass) const;
+
+	template<typename ResultClass>
+	const ResultClass* FindFragmentByClass() const
+	{
+		return (ResultClass*)FindFragmentByClass(ResultClass::StaticClass());
+	}
 
 public:
 

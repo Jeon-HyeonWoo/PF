@@ -10,6 +10,7 @@
  * 
  */
 
+class UPFEquipmentManagerComponent;
 class UPFInventoryItemInstance;
 class UPFEquipmentInstance;
 
@@ -26,8 +27,15 @@ public:
 
 public:
 
+	UPFEquipmentManagerComponent* FindEquipmentManager() const;
+	void UnEquipItemInSlot();
+	void EquipItemInSlot();
+
 	UFUNCTION(BlueprintCallable)
 	void AddItemSlot(int32 SlotIndex, UPFInventoryItemInstance* Item);
+
+	UFUNCTION(BlueprintCallable, Category = "PF")
+	void SetActiveSlotIndex(int32 NewIndex);
 
 public:
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "PFEquipmentDefinition.h"
 #include "PFEquipmentInstance.generated.h"
 
 /**
@@ -18,6 +19,23 @@ public:
 
 	UPFEquipmentInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
+	UFUNCTION(BlueprintImplementableEvent, Category = Equipment, meta = (DisplayName = "OnEquipped"))
+	void K2_OnEquipped();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Equipment, meta = (DisplayName = "OnUnEquipped"))
+	void K2_OnUnEquipped();
+
+	UFUNCTION(BlueprintPure, Category = Equipment)
+	APawn* GetPawn() const;
+
+	virtual void OnEquipped();
+	virtual void OnUnEquipped();
+
+public:
+
+	void SpawnEquipmentActors(const TArray<FPFEquipmentActorToSpawn>& ActorsToSpawn);
+	void DestroyEquipmentActors(); 
+
 public:
 
 	UPROPERTY()

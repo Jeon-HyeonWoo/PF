@@ -35,6 +35,9 @@ struct FPFEquipmentList
 
 	}
 
+	UPFEquipmentInstance* AddEntry(TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition);
+	void RemoveEntry(UPFEquipmentInstance* EquipmentInstance);
+
 	UPROPERTY()
 	TArray<FPFAppliedEquipmentEntry> Entries;
 
@@ -51,8 +54,13 @@ public:
 
 	UPFEquipmentManagerComponent(const FObjectInitializer& ObjectIntializer = FObjectInitializer::Get());
 
+public: 
+
+	UPFEquipmentInstance* EquipItem(TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition);
+	void UnEquipItem(UPFEquipmentInstance* ItemInstance);
+
 public:
 
 	UPROPERTY()
-	FPFEquipmentList EuqipmentList;
+	FPFEquipmentList EquipmentList;
 };

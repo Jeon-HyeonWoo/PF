@@ -12,7 +12,7 @@
 * 
 */
 UCLASS(Abstract,DefaultToInstanced, EditInlineNew)
-class UPFInventroyItemFragment : public UObject
+class UPFInventoryItemFragment : public UObject
 {
 	GENERATED_BODY()
 
@@ -31,9 +31,13 @@ public:
 
 public:
 
+	const UPFInventoryItemFragment* FindFragmentByClass(TSubclassOf<UPFInventoryItemFragment> FragmentClass) const;
+
+public:
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Display)
 	FText DisplayName;
 
 	UPROPERTY(EditDefaultsOnly, Instanced, BlueprintReadOnly, Category = Display)
-	TArray<TObjectPtr<UPFInventroyItemFragment>> Fragments;
+	TArray<TObjectPtr<UPFInventoryItemFragment>> Fragments;
 };
