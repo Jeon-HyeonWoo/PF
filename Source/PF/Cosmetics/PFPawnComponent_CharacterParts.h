@@ -74,6 +74,9 @@ public:
 
 	USkeletalMeshComponent* GetParentMeshComponent() const;
 	USceneComponent* GetSceneComponentToAttachTo() const;
+
+	/* Get tags of the attached cosmetic */
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = Cosmetic)
 	FGameplayTagContainer GetCombindTags(FGameplayTag RequiredPrefix) const;
 	void BroadcastChanged();
 

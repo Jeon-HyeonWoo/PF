@@ -19,6 +19,10 @@ public:
 
 	UPFWeaponInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+public:
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = Animation)
+	TSubclassOf<UAnimInstance> PickBestAnimLayer(bool bEquipped, const FGameplayTagContainer& CosmeticTags) const;
 
 public:
 

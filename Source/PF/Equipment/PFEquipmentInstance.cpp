@@ -60,3 +60,16 @@ void UPFEquipmentInstance::DestroyEquipmentActors()
 		}
 	}
 }
+
+APawn* UPFEquipmentInstance::GetTypedPawn(TSubclassOf<APawn> PawnType) const
+{
+	APawn* Result = nullptr;
+	if (UClass* ActualPawnType = PawnType)
+	{
+		if (GetOuter()->IsA(ActualPawnType))
+		{
+			Result = Cast<APawn>(GetOuter());
+		}
+	}
+	return Result;
+}

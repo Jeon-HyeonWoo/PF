@@ -36,6 +36,10 @@ public:
 	void SpawnEquipmentActors(const TArray<FPFEquipmentActorToSpawn>& ActorsToSpawn);
 	void DestroyEquipmentActors(); 
 
+	/* Redirect OutputType Pawn* -> Want to Type */
+	UFUNCTION(BlueprintPure, Category = Equipment, meta = (DeterminesOutputType = PawnType))
+	APawn* GetTypedPawn(TSubclassOf<APawn> PawnType) const;
+
 public:
 
 	UPROPERTY()
