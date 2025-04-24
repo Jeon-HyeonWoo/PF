@@ -10,6 +10,7 @@
  * 
  */
 
+class UPFAbilitySet;
 class UPFEquipmentInstance;
 
 USTRUCT()
@@ -43,4 +44,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Equipment)
 	TArray<FPFEquipmentActorToSpawn> ActorsToSpawn;
+
+	/* Ability By Equip-Type */
+	UPROPERTY(EditDefaultsOnly, Category = Equipment)
+	TArray<TObjectPtr<UPFAbilitySet>> AbilitySetToGrant;
 };

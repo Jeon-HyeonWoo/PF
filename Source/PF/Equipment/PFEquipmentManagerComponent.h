@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/PawnComponent.h"
+#include "PF/AbilitySystem/PFAbilitySet.h"
 #include "PFEquipmentManagerComponent.generated.h"
 
 /**
@@ -22,6 +23,9 @@ struct FPFAppliedEquipmentEntry
 
 	UPROPERTY()
 	TObjectPtr<UPFEquipmentInstance> Instance = nullptr;
+
+	UPROPERTY()
+	FPFAbilitySet_GrantedHandles GrantedHandles;
 };
 
 USTRUCT(BlueprintType)
@@ -37,6 +41,8 @@ struct FPFEquipmentList
 
 	UPFEquipmentInstance* AddEntry(TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition);
 	void RemoveEntry(UPFEquipmentInstance* EquipmentInstance);
+
+	UPFAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 	UPROPERTY()
 	TArray<FPFAppliedEquipmentEntry> Entries;

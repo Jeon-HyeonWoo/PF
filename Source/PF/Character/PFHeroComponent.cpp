@@ -19,6 +19,8 @@
 #include "PlayerMappableInputConfig.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+//AbilitySystem
+#include "PF/AbilitySystem/PFAbilitySystemComponent.h"
 
 
 const FName UPFHeroComponent::Name_ActorFeatureName("HeroComponent");
@@ -127,7 +129,7 @@ bool UPFHeroComponent::CanChangeInitState(UGameFrameworkComponentManager* Manage
 void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState)
 {
 	const FPFGameplayTags& InitTags = FPFGameplayTags::Get();
-
+	
 	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
 	{
 		APawn* Pawn = GetPawn<APawn>();
@@ -143,6 +145,8 @@ void UPFHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Man
 		if (UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
 		{
 			PawnData = PawnExtComp->GetPawnData<UPFPawnData>();
+
+			PawnExtComp->InitialzeAbilitySystem(ClonePS->GetPFAbilitySystemComponent(), ClonePS);
 		}
 
 		//Camera Handling
@@ -243,6 +247,12 @@ void UPFHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompone
 
 				UPFEnhancedInputComponent* PFIC = CastChecked<UPFEnhancedInputComponent>(PlayerInputComponent);
 				{
+					/* AbilitySystem PlugIn Binding */
+					{
+						TArray<uint32> BindHandles;
+						PFIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, BindHandles);
+					}
+					/* Bind Natvie(c++, Common Provided by Unreal) Binding*/
 					PFIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, false);
 					PFIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_LookMouse, false);
 				}
@@ -304,4 +314,32 @@ void UPFHeroComponent::Input_LookMouse(const FInputActionValue& InputActionValue
 		Pawn->AddControllerPitchInput(AnimInversionValue);
 	}
 
+}
+
+void UPFHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (UPFAbilitySystemComponent* PFASC = PawnExtComp->GetPFAbilitySystemComponent())
+			{
+				PFASC->AbilityInputTagPressed(InputTag);
+			}
+		}
+	}
+}
+
+void UPFHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const UPFPawnExtensionComponent* PawnExtComp = UPFPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (UPFAbilitySystemComponent* PFASC = PawnExtComp->GetPFAbilitySystemComponent())
+			{
+				PFASC->AbilityInputTagReleased(InputTag);
+			}
+		}
+	}
 }

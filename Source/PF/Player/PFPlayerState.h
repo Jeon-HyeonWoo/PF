@@ -6,8 +6,10 @@
 #include "GameFramework/PlayerState.h"
 #include "PFPlayerState.generated.h"
 
+
 class UPFExperienceDefinition;
 class UPFPawnData;
+class UPFAbilitySystemComponent;
 /**
  * PlayerState is Created after PlayerController 
  */
@@ -18,7 +20,11 @@ class PF_API APFPlayerState : public APlayerState
 
 public:
 	
+	APFPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
 	virtual void PostInitializeComponents() final;
+
+public:
 
 	/*
 	* Return Cached Pawn Data template type
@@ -31,8 +37,15 @@ public:
 
 	void SetPawnData(const UPFPawnData* InPawnData);
 
+	UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const { return AbilitySystemComponent; }
+
+public:
+
 	/* for GAS PawnData Cache */
 	UPROPERTY()
 	TObjectPtr<const UPFPawnData> PawnData;
+
+	UPROPERTY(VisibleAnywhere, Category = "PF|PlayerState")
+	TObjectPtr<UPFAbilitySystemComponent> AbilitySystemComponent;
 	
 };

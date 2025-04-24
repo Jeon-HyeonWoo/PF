@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using UnrealBuildTool.Rules;
 
 public class PF : ModuleRules
 {
@@ -19,6 +20,8 @@ public class PF : ModuleRules
 			"GameFeatures",
 			"CommonUser", //Custom PlugIn : for move to other userfacingexperience;
 			"ModularGameplayActors",
+			"GameplayAbilities",
+			"GameplayTasks",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

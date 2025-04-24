@@ -4,6 +4,9 @@
 #include "PFEquipmentManagerComponent.h"
 #include "PFEquipmentInstance.h"
 #include "PFEquipmentDefinition.h"
+/*AbilitySystem*/
+#include "AbilitySystemGlobals.h"
+#include "PF/AbilitySystem/PFAbilitySystemComponent.h"
 
 UPFEquipmentManagerComponent::UPFEquipmentManagerComponent(const FObjectInitializer& ObjectIntializer)
 	: Super(ObjectIntializer)
@@ -13,7 +16,7 @@ UPFEquipmentManagerComponent::UPFEquipmentManagerComponent(const FObjectInitiali
 
 UPFEquipmentInstance* FPFEquipmentList::AddEntry(TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition)
 {
-	
+	/* Spawn and Create Equipment */
 	UPFEquipmentInstance* Result = nullptr;
 	check(EquipmentDefinition != nullptr);
 	check(OwnerComponent);
@@ -33,6 +36,18 @@ UPFEquipmentInstance* FPFEquipmentList::AddEntry(TSubclassOf<UPFEquipmentDefinit
 	NewEntry.Instance = NewObject<UPFEquipmentInstance>(OwnerComponent->GetOwner(), InstanceType);
 	Result = NewEntry.Instance;
 
+	/* Give Ability System */
+	UPFAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	check(ASC);
+	{
+		for (const TObjectPtr<UPFAbilitySet> AbilitySet : EquipmentCDO->AbilitySetToGrant)
+		{
+			AbilitySet->GiveToAbilitySystem(ASC, &NewEntry.GrantedHandles, Result);
+		}
+	}
+
+
+
 	Result->SpawnEquipmentActors(EquipmentCDO->ActorsToSpawn);
 
 	return Result;
@@ -46,10 +61,28 @@ void FPFEquipmentList::RemoveEntry(UPFEquipmentInstance* EquipmentInstance)
 
 		if (Entry.Instance == EquipmentInstance)
 		{
+			/* */
+			UPFAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+			check(ASC);
+			{
+				Entry.GrantedHandles.TakeFromAbilitySystem(ASC);
+			}
+
+			/* Remove Equipment Actor*/
 			EquipmentInstance->DestroyEquipmentActors();
 			EntryIt.RemoveCurrent();
 		}
 	}
+}
+
+UPFAbilitySystemComponent* FPFEquipmentList::GetAbilitySystemComponent() const
+{
+	//OwnerComponent = EquipmentManager
+	check(OwnerComponent);
+	//OwningActor = Pawn
+	AActor* OwningActor = OwnerComponent->GetOwner();
+
+	return Cast<UPFAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor));
 }
 
 UPFEquipmentInstance* UPFEquipmentManagerComponent::EquipItem(TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition)

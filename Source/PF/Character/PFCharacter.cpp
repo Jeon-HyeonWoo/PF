@@ -4,6 +4,7 @@
 #include "PFCharacter.h"
 #include "PFPawnExtensionComponent.h"
 #include "PF/Character/PFPawnExtensionComponent.h"
+#include "PF/AbilitySystem/PFAbilitySystemComponent.h"
 #include "PF/Camera/PFCameraComponent.h"
 
 // Sets default values
@@ -23,6 +24,11 @@ APFCharacter::APFCharacter()
 		CameraComponent = CreateDefaultSubobject<UPFCameraComponent>(TEXT("CameraComponent"));
 		CameraComponent->SetRelativeLocation(FVector(-300.0f, 0.0f, 75.0f));
 	}
+}
+
+UAbilitySystemComponent* APFCharacter::GetAbilitySystemComponent() const
+{
+	return PawnExtComponent->GetPFAbilitySystemComponent();
 }
 
 // Called when the game starts or when spawned

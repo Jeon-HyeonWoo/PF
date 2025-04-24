@@ -5,6 +5,7 @@
 #include "PF/PFLogChannels.h"
 #include "PF/PFGameplayTags.h"
 #include "Components/GameFrameworkComponentManager.h"
+#include "PF/AbilitySystem/PFAbilitySystemComponent.h"
 
 const FName UPFPawnExtensionComponent::Name_ActorFeatureName("PawnExtension");
 
@@ -146,4 +147,40 @@ void UPFPawnExtensionComponent::SetPawnData(const UPFPawnData* InPawnData)
 void UPFPawnExtensionComponent::SetupPlayerInputComponent()
 {
 	CheckDefaultInitialization();
+}
+
+
+void UPFPawnExtensionComponent::InitialzeAbilitySystem(UPFAbilitySystemComponent* InASC, AActor* InOwnerActor)
+{
+	check(InASC && InOwnerActor);
+
+	/* Cached ASC == Param's ASC -> Return */
+	if (AbilitySystemComponent == InASC)
+	{
+		return;
+	}
+
+	/* Changed Ability System -> Current ACS UnInit */
+	if (AbilitySystemComponent)
+	{
+		UnInitializeAbilitySystem();
+	}
+
+	/* PawnExtensionComponent's OwnerPawn = User Pawn */
+	APawn* Pawn = GetPawnChecked<APawn>();
+	AActor* ExistingAvatar = InASC->GetAvatarActor();
+	check(!ExistingAvatar);
+	
+	/* Resetting AbilitySystem OwnerActor and AvatarActor */
+	AbilitySystemComponent = InASC;
+	AbilitySystemComponent->InitAbilityActorInfo(InOwnerActor, Pawn);
+ }
+
+void UPFPawnExtensionComponent::UnInitializeAbilitySystem()
+{
+	if (!AbilitySystemComponent)
+	{
+		return;
+	}
+	AbilitySystemComponent = nullptr;
 }

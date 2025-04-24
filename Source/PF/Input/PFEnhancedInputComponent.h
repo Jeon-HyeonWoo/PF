@@ -39,7 +39,7 @@ public:
 		UserClass* Object,
 		PressedFuncType PressedFunc,
 		ReleasedFuncType ReleasedFunc,
-		TArray<int32>& BindHandles
+		TArray<uint32>& BindHandles
 	);
 };
 
@@ -55,7 +55,7 @@ inline void UPFEnhancedInputComponent::BindNativeAction(const UPFInputConfig* In
 }
 
 template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
-inline void UPFEnhancedInputComponent::BindAbilityActions(const UPFInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, TArray<int32>& BindHandles)
+inline void UPFEnhancedInputComponent::BindAbilityActions(const UPFInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, TArray<uint32>& BindHandles)
 {
 	check(InputConfig);
 

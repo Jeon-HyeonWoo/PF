@@ -4,19 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "ModularCharacter.h"
+#include "AbilitySystemInterface.h"
 #include "PFCharacter.generated.h"
 
 class UPFPawnExtensionComponent;
 class UPFCameraComponent;
 
 UCLASS()
-class PF_API APFCharacter : public AModularCharacter
+class PF_API APFCharacter : public AModularCharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	APFCharacter();
+
+public:
+	//AbilitySystemInterface Override
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
 	// Called when the game starts or when spawned

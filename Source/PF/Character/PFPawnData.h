@@ -8,8 +8,9 @@
 
 class UPFCameraMode;
 class UPFInputConfig;
+class UPFAbilitySet;
 /**
- * 
+ * Pawn's Comprehensive Information 
  */
 UCLASS()
 class PF_API UPFPawnData : public UPrimaryDataAsset
@@ -30,4 +31,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PF|InputConfig")
 	TObjectPtr<UPFInputConfig> InputConfig;
+
+	/* Ability System, setting in PlayerState */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PF|Abilities")
+	TArray<TObjectPtr<UPFAbilitySet>> AbilitySets;
 };

@@ -7,6 +7,7 @@
 #include "Components/GameFrameworkInitStateInterface.h"
 #include "PFPawnExtensionComponent.generated.h"
 
+class UPFAbilitySystemComponent;
 class UPFPawnData;
 /**
  * 초기화 전반을 조정하는 컴포넌트
@@ -19,6 +20,8 @@ class PF_API UPFPawnExtensionComponent : public UPawnComponent, public IGameFram
 public:
 
 	UPFPawnExtensionComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+public:
 
 	static UPFPawnExtensionComponent* FindPawnExtensionComponent(const AActor* Actor)
 	{
@@ -49,10 +52,22 @@ public:
 	virtual bool CanChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const final;
 	virtual void CheckDefaultInitialization() final;
 
-	/* 
-	* PawnData Cached
+	/*
+	* AbilitySystem
 	*/
+	UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const { return AbilitySystemComponent; }
+	void InitialzeAbilitySystem(UPFAbilitySystemComponent* InASC, AActor* InOwnerActor);
+	void UnInitializeAbilitySystem();
+	
+
+public: 
+
+	/*  PawnData Cache */
 	UPROPERTY(EditInstanceOnly, Category = "PF | Pawn")
 	TObjectPtr<const UPFPawnData> PawnData;
+
+	/* AbilitySystemComponent Cache */
+	UPROPERTY()
+	TObjectPtr<UPFAbilitySystemComponent> AbilitySystemComponent;
 };
  
