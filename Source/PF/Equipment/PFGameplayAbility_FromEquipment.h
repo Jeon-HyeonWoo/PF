@@ -6,6 +6,7 @@
 #include "PF/AbilitySystem/Abilities/PFGameplayAbility.h"
 #include "PFGameplayAbility_FromEquipment.generated.h"
 
+class UPFEquipmentInstance;
 /**
  * 
  */
@@ -13,5 +14,8 @@ UCLASS()
 class PF_API UPFGameplayAbility_FromEquipment : public UPFGameplayAbility
 {
 	GENERATED_BODY()
-	
+public:
+
+	UPFEquipmentInstance* GetAssociatedEquipment() const;
+
 };

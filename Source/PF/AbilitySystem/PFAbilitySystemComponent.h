@@ -19,6 +19,8 @@ public:
 
 	UPFAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
+
 public:
 
 	//Ability Input

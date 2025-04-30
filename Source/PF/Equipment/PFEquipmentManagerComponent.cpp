@@ -111,4 +111,22 @@ void UPFEquipmentManagerComponent::UnEquipItem(UPFEquipmentInstance* ItemInstanc
 	}
 }
 
+TArray<UPFEquipmentInstance*> UPFEquipmentManagerComponent::GetEquipmentInstancesOfType(TSubclassOf<UPFEquipmentInstance> InstanceType) const
+{
+	TArray<UPFEquipmentInstance*> Result;
+
+	for (const FPFAppliedEquipmentEntry& Entry : EquipmentList.Entries)
+	{
+		if (UPFEquipmentInstance* Instance = Entry.Instance)
+		{
+			if (Instance->IsA(InstanceType))
+			{
+				Result.Add(Instance);
+			}
+		}
+	}
+
+	return Result;
+}
+
 

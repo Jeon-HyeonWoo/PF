@@ -65,6 +65,9 @@ public:
 	UPFEquipmentInstance* EquipItem(TSubclassOf<UPFEquipmentDefinition> EquipmentDefinition);
 	void UnEquipItem(UPFEquipmentInstance* ItemInstance);
 
+	UFUNCTION(BlueprintCallable)
+	TArray<UPFEquipmentInstance*> GetEquipmentInstancesOfType(TSubclassOf<UPFEquipmentInstance> InstanceType) const;
+
 public:
 
 	UPROPERTY()
