@@ -7,7 +7,8 @@
 #include "PFAbilitySystemComponent.generated.h"
 
 /**
- * Attach to PlayerState (NetWork Game case)
+ * Attach to P
+ State (NetWork Game case)
  * 
  */
 UCLASS()
